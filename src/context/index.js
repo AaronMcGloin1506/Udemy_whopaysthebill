@@ -27,8 +27,20 @@ class MyProvider extends Component {
         this.setState({
             players: newArray
         })
+    }
+
+    generateLoser = () => {
+        let newArray = this.state.players;
+        let randomNumber = Math.floor(Math.random() * newArray.length);
+        let loser = newArray[randomNumber]
+        this.setState({
+            result: loser
+        })
 
     }
+
+
+
     nextHandler = () => {
         const { players } = this.state;
 
@@ -38,8 +50,22 @@ class MyProvider extends Component {
                 autoClose: 2000
             })
         } else {
-            console.log('move to stage 2')
+            this.setState({
+                stage: 2
+            },()=> {
+                setTimeout(()=>{
+                    this.generateLoser()
+                },2000)
+            })
         }
+    }
+
+    resetHandler = () => {
+        this.setState({
+            stage: 1,
+            players: [],
+            result:''
+        })
     }
 
     render(){
@@ -49,7 +75,10 @@ class MyProvider extends Component {
                     state:this.state,
                     addPlayer:this.addPlayerHandler,
                     removePlayer: this.removePlayerHandler,
-                    next: this.nextHandler
+                    next: this.nextHandler,
+                    generateLoser: this.generateLoser,
+                    reset: this.resetHandler
+
                 }}>
                     {this.props.children}
                 </MyContext.Provider>
